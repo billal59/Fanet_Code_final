@@ -6,6 +6,15 @@
 var map;
 var directionsDisplay;
 var directionsService;
+
+var directionsDisplay1;
+var directionsService1;
+
+var directionsDisplay2;
+var directionsService2;
+
+var directionsDisplay3;
+var directionsService3;
 var srcLatLng,destLatLng;
 
 function initMap() {
@@ -13,44 +22,66 @@ function initMap() {
         zoom: 13
     });
     directionsService = new google.maps.DirectionsService();
-    var rendererOptions = {
-        map: map
-    }
-    directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
+    directionsService1 = new google.maps.DirectionsService();
+    directionsService2 = new google.maps.DirectionsService();
+    directionsService3 = new google.maps.DirectionsService();
+
+    var rendererOptions = {map: map};
+    directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+    directionsDisplay1 = new google.maps.DirectionsRenderer(rendererOptions);
+    directionsDisplay2 = new google.maps.DirectionsRenderer(rendererOptions);
+    directionsDisplay3 = new google.maps.DirectionsRenderer(rendererOptions);
 
 
-    var markerSrc = new google.maps.Marker({
-        map: map,
-        anchorPoint: new google.maps.Point(0, -29)
-    });
+    var markerSrc = getMarker();
+    var markerDest = getMarker();
 
-    var markerDest = new google.maps.Marker({
-        map: map,
-        anchorPoint: new google.maps.Point(0, -29)
-    });
+    var markerSrc1 = getMarker();
+    var markerDest1 = getMarker();
+
+    var markerSrc2 = getMarker();
+    var markerDest2 = getMarker();
+
+    var markerSrc3 = getMarker();
+    var markerDest3 = getMarker();
 
     var address = 'Dhaka';
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({'address': address}, function (results, status) {
         map.setCenter(results[0].geometry.location);
     });
+    
+    srcLatLng = [];
+    destLatLng = [] ; 
+        
+    relateInputWithAutoComplete('start', markerSrc, 'infoSrc-content', 0);
+    relateInputWithAutoComplete('end', markerDest, 'infoDest-content', 1);
+    relateInputWithAutoComplete('start1', markerSrc1, 'infoSrc1-content', 2);
+    relateInputWithAutoComplete('end1', markerDest1, 'infoDest1-content', 3);
+    relateInputWithAutoComplete('start2', markerSrc2, 'infoSrc2-content', 4);
+    relateInputWithAutoComplete('end2', markerDest2, 'infoDest2-content', 5);
+    relateInputWithAutoComplete('start3', markerSrc3, 'infoSrc3-content', 6);
+    relateInputWithAutoComplete('end3', markerDest3, 'infoDest3-content', 7);
 
-    var inputSrc = document.getElementById('start');
+}
+
+function getMarker() {
+    return  new google.maps.Marker({
+        map: map,
+        anchorPoint: new google.maps.Point(0, -29)
+    });
+}
+
+function relateInputWithAutoComplete(inputIdName, markerSrc, infoWindowID, flag) {
+    var inputSrc = document.getElementById(inputIdName);
     var autocompleteSrc = new google.maps.places.Autocomplete(inputSrc);
     autocompleteSrc.setFields(['address_components', 'geometry', 'icon', 'name']);
     autocompleteSrc.bindTo('bounds', map);
-    var infowindowSrc = document.getElementById('infoSrc-content');
-    setAddListener(autocompleteSrc, markerSrc, infowindowSrc,0);
-
-    var inputDest = document.getElementById('end');
-    var autocompleteDest = new google.maps.places.Autocomplete(inputDest);
-    autocompleteDest.setFields(['address_components', 'geometry', 'icon', 'name']);
-    autocompleteDest.bindTo('bounds', map);
-    var infowindowDest = document.getElementById('infoDest-content');
-    setAddListener(autocompleteDest, markerDest, infowindowDest,1);
+    var infowindow = document.getElementById(infoWindowID);
+    setAddListener(autocompleteSrc, markerSrc, infowindow, flag);
 }
 
-function setAddListener(autocomplete, marker, infowindowContent,flag) {
+function setAddListener(autocomplete, marker, infowindowContent, flag) {
     var infowindow = new google.maps.InfoWindow();
     infowindow.setContent(infowindowContent);
     autocomplete.addListener('place_changed', function () {
@@ -61,6 +92,10 @@ function setAddListener(autocomplete, marker, infowindowContent,flag) {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
             window.alert("No details available for input: '" + place.name + "'");
+            if(flag %2 == 0) 
+                srcLatLng.push(null);
+            else 
+                destLatLng.push(null);
             return;
         }
 
@@ -71,12 +106,15 @@ function setAddListener(autocomplete, marker, infowindowContent,flag) {
             map.setCenter(place.geometry.location);
             map.setZoom(17);  // Why 17? Because it looks good.
         }
+       // alert("hello1 "+place.geometry.location.lat());
+      //  alert("hello2 "+place.geometry.location.lng());
+        
         marker.setPosition(place.geometry.location);
-        if(flag==0)
-            srcLatLng=place.geometry.location;
-        else
-            destLatLng=place.geometry.location;
-            
+        if(flag %2 == 0) 
+            srcLatLng.push(place.geometry.location);
+        else 
+            destLatLng.push(place.geometry.location);
+         
         marker.setVisible(true);
 
         var address = '';

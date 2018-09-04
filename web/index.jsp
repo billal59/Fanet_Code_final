@@ -62,55 +62,43 @@
                         <div class="form-group input-group">
                             <div class="row">
                                 <div class="col-xs-3">
-                                <input type="text" id="start" class="form-control" placeholder="Source Address"> <br>
-                                <input type="text" id="end" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start" class="form-control" placeholder="Source Address"> <br>
+                                    <input type="text" id="end" class="form-control" placeholder="Destination Address">
                                 </div>
                                 <div class="col-xs-3"> 
-                                 <input type="text" id="start" class="form-control" placeholder="Source Address"> 
-                                <input type="text" id="end" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start1" class="form-control" placeholder="Source Address"> 
+                                    <input type="text" id="end1" class="form-control" placeholder="Destination Address">
                                 </div>
                                 <div class="col-xs-3"> 
-                                 <input type="text" id="start" class="form-control" placeholder="Source Address"> 
-                                <input type="text" id="end" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start2" class="form-control" placeholder="Source Address"> 
+                                    <input type="text" id="end2" class="form-control" placeholder="Destination Address">
                                 </div>
                                 <div class="col-xs-3"> 
-                                 <input type="text" id="start" class="form-control" placeholder="Source Address"> 
-                                <input type="text" id="end" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start3" class="form-control" placeholder="Source Address"> 
+                                    <input type="text" id="end3" class="form-control" placeholder="Destination Address">
                                 </div>
                             </div>
                             <div class="input-group-btn">
-                                <button class="btn btn-default get_map" onClick="displayRoute();">
+                                <button class="btn btn-default get_map" onClick="displayRouteInMap();">
                                     Locate
                                 </button>
-                            </div>
-                        </div> 
-                        <div id="infoSrc-content">
-                            <img src="" width="16" height="16" id="place-icon">
-                            <span id="place-name"  class="title"></span><br>
-                            <span id="place-address"></span>
+                            </div>   
                         </div>
-
-                        <div id="infoDest-content">
-                            <img src="" width="16" height="16" id="place-icon">
-                            <span id="place-name"  class="title"></span><br>
-                            <span id="place-address"></span>
-                        </div>
-
-
+                    </div>
+                    <div class="col-sm">    
+                        <!-- display google map -->
+                        <div id="geomap"></div>                     
                     </div>
                 </div>
-                <div class="col-sm">    
-                    <!-- display google map -->
-                    <div id="geomap"></div>                     
-                </div>
             </div>
-        </div> 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="http://demos.codexworld.com/includes/js/bootstrap.js"></script>
-        <!-- Place this tag in your head or just before your close body tag. -->
-        <script src="https://apis.google.com/js/platform.js" async defer></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8pZxUOR0h2lo_uHZx4-JbryPEjf7zm1E&libraries=places&callback=initMap"></script>
+            
+            <jsp:include page="infowindow.jsp"></jsp:include>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+            <script src="http://demos.codexworld.com/includes/js/bootstrap.js"></script>
+            <!-- Place this tag in your head or just before your close body tag. -->
+            <script src="https://apis.google.com/js/platform.js" async defer></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8pZxUOR0h2lo_uHZx4-JbryPEjf7zm1E&libraries=places&callback=initMap"></script>
 
     </body>
 </html>
