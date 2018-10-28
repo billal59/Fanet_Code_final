@@ -26,7 +26,10 @@
             ul#geoData span {
                 font-weight: normal;
             }
+            
+            html, body {margin: 40px; height: 100%; overflow: hidden}
         </style>
+        <script src="js/webapi.js"></script>
         <script src="js/mapjs.js"></script>
         <script src="js/displayRoute.js"></script>
     </head>
@@ -44,7 +47,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <span style="color:#ff00cc">Thesis Done BY Billal And Sahjahan</span>
+                            <span style="color:#ff00cc">Thesis Done BY Billal And Shahajahan</span>
                         </li>
                     </ul>
                 </div>
@@ -62,20 +65,20 @@
                         <div class="form-group input-group">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <input type="text" id="start" class="form-control" placeholder="Source Address"> <br>
-                                    <input type="text" id="end" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start" class="form-control" placeholder="Destination Address"> <br>
+                                    <input type="text" id="end" class="form-control" placeholder="Source Address">
                                 </div>
                                 <div class="col-xs-3"> 
-                                    <input type="text" id="start1" class="form-control" placeholder="Source Address"> 
-                                    <input type="text" id="end1" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start1" class="form-control" placeholder="Destination Address"> 
+                                    <input type="text" id="end1" class="form-control" placeholder="Source Address">
                                 </div>
                                 <div class="col-xs-3"> 
-                                    <input type="text" id="start2" class="form-control" placeholder="Source Address"> 
-                                    <input type="text" id="end2" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start2" class="form-control" placeholder="Destination Address"> 
+                                    <input type="text" id="end2" class="form-control" placeholder="Source Address">
                                 </div>
                                 <div class="col-xs-3"> 
-                                    <input type="text" id="start3" class="form-control" placeholder="Source Address"> 
-                                    <input type="text" id="end3" class="form-control" placeholder="Destination Address">
+                                    <input type="text" id="start3" class="form-control" placeholder="Destination Address"> 
+                                    <input type="text" id="end3" class="form-control" placeholder="Source Address">
                                 </div>
                             </div>
                             <div class="input-group-btn">
@@ -91,7 +94,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <jsp:include page="infowindow.jsp"></jsp:include>
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
             <script src="http://demos.codexworld.com/includes/js/bootstrap.js"></script>

@@ -15,7 +15,7 @@ var directionsService2;
 
 var directionsDisplay3;
 var directionsService3;
-var srcLatLng,destLatLng;
+var srcLatLng, destLatLng;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('geomap'), {
@@ -50,10 +50,10 @@ function initMap() {
     geocoder.geocode({'address': address}, function (results, status) {
         map.setCenter(results[0].geometry.location);
     });
-    
+
     srcLatLng = [];
-    destLatLng = [] ; 
-        
+    destLatLng = [];
+
     relateInputWithAutoComplete('start', markerSrc, 'infoSrc-content', 0);
     relateInputWithAutoComplete('end', markerDest, 'infoDest-content', 1);
     relateInputWithAutoComplete('start1', markerSrc1, 'infoSrc1-content', 2);
@@ -62,7 +62,6 @@ function initMap() {
     relateInputWithAutoComplete('end2', markerDest2, 'infoDest2-content', 5);
     relateInputWithAutoComplete('start3', markerSrc3, 'infoSrc3-content', 6);
     relateInputWithAutoComplete('end3', markerDest3, 'infoDest3-content', 7);
-
 }
 
 function getMarker() {
@@ -88,14 +87,18 @@ function setAddListener(autocomplete, marker, infowindowContent, flag) {
         infowindow.close();
         marker.setVisible(false);
         var place = autocomplete.getPlace();
+        var flagNew = parseInt(flag/2);
         if (!place.geometry) {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
             window.alert("No details available for input: '" + place.name + "'");
-            if(flag %2 == 0) 
-                srcLatLng.push(null);
-            else 
-                destLatLng.push(null);
+            if (flag % 2 == 0) {
+                srcLatLng[flagNew] = null;
+               // alert("flag error " + flag);
+            } else {
+                destLatLng[flagNew] = null;
+              //  alert("flag error " + flag);
+            }
             return;
         }
 
@@ -106,15 +109,20 @@ function setAddListener(autocomplete, marker, infowindowContent, flag) {
             map.setCenter(place.geometry.location);
             map.setZoom(17);  // Why 17? Because it looks good.
         }
-       // alert("hello1 "+place.geometry.location.lat());
-      //  alert("hello2 "+place.geometry.location.lng());
-        
+        // alert("hello1 "+place.geometry.location.lat());
+        //  alert("hello2 "+place.geometry.location.lng());
+
         marker.setPosition(place.geometry.location);
-        if(flag %2 == 0) 
-            srcLatLng.push(place.geometry.location);
-        else 
-            destLatLng.push(place.geometry.location);
-         
+
+
+        //alert("flag value " + flag + " and flagNew value is " + flagNew);
+        if (flag % 2 == 0) {
+            srcLatLng[flagNew] = place.geometry.location;
+            //alert("srcLatLng length " + srcLatLng.length);
+        } else {
+            destLatLng[flagNew] = place.geometry.location;
+           // alert("destLatLng length " + destLatLng.length);
+        }
         marker.setVisible(true);
 
         var address = '';

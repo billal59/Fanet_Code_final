@@ -13,16 +13,23 @@ function displayRouteInMap() {
                 marker3 = getMarker(srcLatLng[2]),
                 marker4 = getMarker(srcLatLng[3]);
     } catch (e) {
-        alert("Dhur hala"+e.message);
+        alert("Dhur " + e.message);
     }
-    displayRoute('start', 'end', directionsService, directionsDisplay, marker1, srcLatLng[0], destLatLng[0]);
-    displayRoute('start1', 'end1', directionsService1, directionsDisplay1, marker2, srcLatLng[1], destLatLng[1]);
-    displayRoute('start2', 'end2', directionsService2, directionsDisplay2, marker3, srcLatLng[2], destLatLng[2]);
-    displayRoute('start3', 'end3', directionsService3, directionsDisplay3, marker4, srcLatLng[3], destLatLng[3]);
+    
+    try{
+      //  alert("srcLatLng length "+srcLatLng.length);
+       // alert("destLatLng length "+destLatLng.length);
+    }catch(e){
+        alert("error "+e.message);
+    }
+    displayRoute('start', 'end', directionsService, directionsDisplay, marker1, srcLatLng[0], destLatLng[0],1);
+    displayRoute('start1', 'end1', directionsService1, directionsDisplay1, marker2, srcLatLng[1], destLatLng[1],2);
+    displayRoute('start2', 'end2', directionsService2, directionsDisplay2, marker3, srcLatLng[2], destLatLng[2],3);
+    displayRoute('start3', 'end3', directionsService3, directionsDisplay3, marker4, srcLatLng[3], destLatLng[3],4);
 
 }
 
-function displayRoute(start, end, drcService, drcDisplay, marker, srcLatLngPost, destLatLngPost) {
+function displayRoute(start, end, drcService, drcDisplay, marker, srcLatLngPost, destLatLngPost,instanceNo) {
     var start = document.getElementById(start).value;
     var end = document.getElementById(end).value;
     var request = {
@@ -36,15 +43,18 @@ function displayRoute(start, end, drcService, drcDisplay, marker, srcLatLngPost,
         }
     });
     if (srcLatLngPost == null || destLatLngPost == null)
+    {   
+      //  alert("srclatitude or destlatitude is null and instance no is "+instanceNo);
         return;
-    startDriving(marker, srcLatLngPost, destLatLngPost);
+    }
+    startDriving(marker, srcLatLngPost, destLatLngPost,instanceNo);
     // alert(start);
 //    alert(getLatLangFromAddress(start).lat());
     //  startDriving();
 }
 
 
-function startDriving(marker, srcLatLngPost, destLatLngPost) {
+function startDriving(marker, srcLatLngPost, destLatLngPost,instanceNo) {
     //i = 0;
     if (marker == null) {
 
@@ -56,41 +66,50 @@ function startDriving(marker, srcLatLngPost, destLatLngPost) {
 
     var deltaLat = (srcLatLngPost.lat() - destLatLngPost.lat()) / numDeltas;
     var deltaLng = (srcLatLngPost.lng() - destLatLngPost.lng()) / numDeltas;
-    moveMarker(marker,0,position0,position1,deltaLat,deltaLng);
+    // moveMarker(marker, 0, position0, position1, deltaLat, deltaLng);
+    getCommand(marker, 1, position0, position1, deltaLat, deltaLng, "10.11.201.170",instanceNo)
 }
 
-var numDeltas = 100;
-var delay = 100; //milliseconds
+var numDeltas = 200;
+var delay = 10; //milliseconds
 
-function getResponseFromAPI(){
-    var json = JSON.stringify({operation: opName, username: "", usedlib: libName, isoconv: "1", samplenum: 1});
+function getCommand(marker, i, position0, position1, deltaLat, deltaLng, ipAddress,instanceNo) {
+    try {
+        var xmlhttp = callwebservice(position0, position1, ipAddress,instanceNo);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+              //  alert(xmlhttp.responseText);
+                var result = JSON.parse(xmlhttp.responseText);
+                if (result.command == "run") {
+                    position0 += deltaLat;
+                    position1 += deltaLng;
+                   // alert('command: '+result.command+' distance: '+result.distance);
+                    console.log('command: '+result.command+' distance: '+result.distance+" instance "+result.instanceNo);
+                    setTimeout(moveMarker,delay , marker, i, position0, position1, deltaLat, deltaLng, ipAddress,instanceNo);
+                } else{
+                    //alert('command: '+result.command+' distance: '+result.distance);
+                    console.log('command: '+result.command+' distance: '+result.distance+" instance "+result.instanceNo);
+                    setTimeout(getCommand, delay*5, marker, i, position0, position1, deltaLat, deltaLng, ipAddress,instanceNo);
+                 }
+            } else if (xmlhttp.status == 404) {
+                alert("webapi not found");
+            }
+        }
 
-    var req = new XMLHttpRequest();
-    req.open("POST", fpHTTSrvOpEP);
-    req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-    req.onload = function () {
-        if (req.status == 200) {
-            return req.response;
-        } else
-            return null;
-    };
-    req.onerror = function () {
-        alert("You have to install futronic sdk");
-    };
-    req.send(json);
+        xmlhttp.onerror = function () {
+            alert("error " + xmlhttp.responseText);
+        }
+    } catch (e) {
+        alert("ok " + e.message);
+    }
 }
 
-function moveMarker(marker,i, position0, position1, deltaLat, deltaLng) {
-    
-    
-    position0 += deltaLat;
-    position1 += deltaLng;
+function moveMarker(marker, i, position0, position1, deltaLat, deltaLng, ipAddress,instanceNo) {
     var latlng = new google.maps.LatLng(position0, position1);
     marker.setPosition(latlng);
-    if (i != numDeltas) {
+    if (i <= numDeltas) {
         i++;
-        setTimeout(moveMarker, delay, marker,i, position0, position1, deltaLat, deltaLng);
+        setTimeout(getCommand, delay, marker, i, position0, position1, deltaLat, deltaLng, ipAddress,instanceNo);
     }
 }
 
@@ -100,7 +119,7 @@ function getMarker(srcLatLngForMarker) {
     });
 
     var image = {
-        url: "https://image.flaticon.com/icons/png/512/55/55283.png",
+        url: "http://icons.iconarchive.com/icons/icons8/ios7/72/Transport-Airplane-Take-Off-icon.png",
         size: new google.maps.Size(71, 71),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(17, 34),
